@@ -1,0 +1,19 @@
+# Go
+proxy-service/proxy-service
+*.exe
+
+# PHP / Laravel
+backend/vendor/
+backend/.env
+backend/storage/*.key
+backend/bootstrap/cache/*.php
+
+# Node / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env*.local
+
+# General
+.DS_Store
+*.log
