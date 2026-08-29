@@ -1,0 +1,52 @@
+services:
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: scraping_service
+      MYSQL_USER: scraping_service
+      MYSQL_PASSWORD: secret
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-uscraping_service", "-psecret"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  proxy-service:
+    build: ./proxy-service
+    restart: unless-stopped
+    env_file:
+      - ./proxy-service/.env
+    ports:
+      - "8081:8081"
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    depends_on:
+      mysql:
+        condition: service_healthy
+      proxy-service:
+        condition: service_started
+    ports:
+      - "8000:8000"
+    command: sh -c 'export APP_KEY=$${APP_KEY:-$$(php artisan key:generate --show)}; php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000'
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8000
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3001:3000"
+
+volumes:
+  mysql_data:

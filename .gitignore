@@ -1,5 +1,6 @@
 # Go
 proxy-service/proxy-service
+proxy-service/.env
 *.exe
 
 # PHP / Laravel

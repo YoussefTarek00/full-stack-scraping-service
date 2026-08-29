@@ -42,9 +42,15 @@ Relevant env vars (see `.env.example`): `PROXY_SERVICE_URL`,
 
 ## Local commands
 
+The default build target is `runtime`, a lean image without dev
+dependencies (no PHPUnit). Tests run against the separate `test` target,
+which does include them.
+
 ```bash
 docker build -t backend .
 docker run --rm --env-file .env backend php artisan migrate --force
-docker run --rm --env-file .env backend php artisan test
 docker run --rm --env-file .env backend php artisan scrape:products --limit=10
+
+docker build --target=test -t backend-test .
+docker run --rm backend-test
 ```
