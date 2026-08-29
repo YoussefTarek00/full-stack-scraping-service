@@ -1,8 +1,8 @@
 # backend
 
 Laravel API backend for the scraping service. Owns the `Product` data, the
-scraper that populates it, and (in a later phase) the `/api/products`
-endpoint the frontend consumes.
+scraper that populates it, and the `/api/products` endpoint the frontend
+consumes.
 
 ## Requirements
 
@@ -31,6 +31,14 @@ unavailable — useful for local development without `proxy-service` running.
 Relevant env vars (see `.env.example`): `PROXY_SERVICE_URL`,
 `PROXY_SERVICE_TIMEOUT`, `SCRAPER_ALLOW_DIRECT_CONNECTION`,
 `SCRAPER_REQUEST_TIMEOUT`, `SCRAPER_TARGET_URL`, `SCRAPER_MAX_PRODUCTS`.
+
+## API
+
+`GET /api/products` returns stored products, newest first:
+
+```json
+{"data": [{"id": 1, "title": "...", "price": "19.99", "image_url": "...", "created_at": "..."}]}
+```
 
 ## Local commands
 
